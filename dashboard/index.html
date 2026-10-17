@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mission Control · Paper Crawler</title>
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><span class="logo">🕷</span><div><b>Mission Control</b><small>Paper Crawler</small></div></div>
+    <nav id="nav"></nav>
+    <div class="side-foot">
+      <a class="btn ghost wide" href="/" target="_blank">Open the app ↗</a>
+      <button class="btn ghost wide" id="themeBtn">Toggle theme</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <h1 id="pageTitle">Overview</h1>
+      <div class="top-r"><span class="pill" id="statusPill"><i></i><span>connecting…</span></span></div>
+    </header>
+    <div id="view"></div>
+  </main>
+</div>
+<div id="toast"></div>
+<script type="module" src="dashboard.js"></script>
+</body>
+</html>

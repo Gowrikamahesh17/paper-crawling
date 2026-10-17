@@ -1,0 +1,180 @@
+/* ===== Paper Crawler styles =====
+   1. page + paper theme   2. LaTeXML (arXiv HTML) cleanup   3. markup effects (.m-*)
+   4. overlay canvas + title caption   5. AI panel */
+
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:#dfe1e6;color:#000;font-family:"Latin Modern Roman","Computer Modern",Georgia,"Times New Roman",serif}
+@media (min-width:1100px){body{padding-right:390px}}
+
+/* ---------- 1. paper ---------- */
+#sheet{max-width:860px;margin:24px auto 120px;background:#fff;padding:56px 64px;box-shadow:0 2px 24px rgba(0,0,0,.18);min-height:100vh}
+#hdr{border-bottom:1px solid #ddd;margin-bottom:28px;padding-bottom:14px;text-align:center}
+#hdr h1{font-size:28px;line-height:1.2;margin:0 0 8px}
+#pAuthors{font-size:15px;color:#333}
+#pMeta{margin-top:8px;font:12px ui-monospace,Menlo,monospace;color:#666;display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap}
+#pMeta select{font:inherit;max-width:260px}
+#paper{font-size:17px;line-height:1.55;text-align:justify;hyphens:auto}
+#paper .boot{color:#888;text-align:center}
+#paper img{max-width:100%;height:auto}
+#paper figure{margin:1.4em 0;text-align:center}
+#paper figcaption,#paper .ltx_caption{font-size:.9em;text-align:left}
+#paper table{border-collapse:collapse;margin:1em auto;font-size:.88em;max-width:100%}
+#paper td,#paper th{padding:3px 8px;border-bottom:1px solid #ccc}
+#paper a{color:#14548a;text-decoration:none}
+#paper math{font-size:1.05em}
+#paper math[display="block"]{display:block;text-align:center;margin:.8em 0}
+#paper h2,#paper h3,#paper h4{text-align:left;margin:1.6em 0 .5em;line-height:1.25}
+#paper h2{font-size:1.4em} #paper h3{font-size:1.15em} #paper h4,#paper h5,#paper h6{font-size:1em}
+.w{border-radius:2px}
+
+/* ---------- 2. LaTeXML cleanup ---------- */
+#paper .ltx_title_document,#paper .ltx_authors,#paper .ltx_dates,#paper .ltx_page_logo,#paper .ltx_pagination,
+#paper .ltx_role_footnote .ltx_note_outer,#paper .package-alerts,#paper .ar5iv-footer,#paper .ltx_page_footer{display:none!important}
+#paper .ltx_abstract{margin:0 2.5em 1.4em;font-size:.95em}
+#paper .ltx_title_abstract{text-align:center;font-size:1em;margin:0 0 .4em}
+#paper .ltx_tag{margin-right:.5em}
+#paper .ltx_bibliography{font-size:.82em;line-height:1.4;text-align:left}
+#paper .ltx_bibitem{margin:.4em 0}
+#paper .ltx_equation,#paper .ltx_eqn_table{width:100%}
+#paper .ltx_eqn_cell{padding:0}
+#paper .ltx_tag_equation{float:right}
+#paper pre,#paper .ltx_listing{font-size:.8em;overflow-x:auto;text-align:left}
+
+/* ---------- 3. research-markup effects (toggled by js/crawler.js) ---------- */
+/* thin outlines */
+.m-box-teal  {box-shadow:0 0 0 1.5px #19c3d6}
+.m-box-purple{box-shadow:0 0 0 1.5px #7b2cff}
+.m-box-orange{box-shadow:0 0 0 1.5px #ff7a3d}
+.m-box-red   {box-shadow:0 0 0 1.5px #e0303a}
+.m-box-green {box-shadow:0 0 0 1.5px #1fae55}
+/* solid bars. box-shadow on the right fills the gap between neighbouring words in a line */
+.m-hl-orange{background:#ff7a3d;color:#1a1a1a;font-weight:700;padding:0 .12em;box-shadow:.25em 0 0 #ff7a3d}
+.m-hl-orange.m-big{font-size:1.9em;line-height:1;padding:0 .2em;box-shadow:none;letter-spacing:-.01em}
+.m-hl-purple{background:#7b2cff;color:#fff!important;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:600;padding:.05em .1em;box-shadow:.28em 0 0 #7b2cff}
+.m-hl-magenta{background:#ff2bd6;color:#fff;font-weight:700;padding:0 .12em;box-shadow:.25em 0 0 #ff2bd6}
+.m-hl-magenta.m-wide{padding:0 .9em;margin:0 -.35em}
+.m-hl-cyan{background:#25d7f0;color:#001a1f;box-shadow:.3em 0 0 #25d7f0}
+.m-hl-green{background:linear-gradient(transparent 30%,#b4f2a6 30%,#b4f2a6 92%,transparent 92%)}
+/* numbers enlarged 2-3x (exact size set inline) */
+.m-blowup{display:inline-block;font-weight:800;line-height:.9;vertical-align:-.1em;font-family:Arial,Helvetica,sans-serif}
+.m-blowup-orange{color:#ff7a3d}
+.m-blowup-red{color:#e0303a}
+/* a phrase rotated and sticking out of the text (wrapper span created by JS) */
+.m-rotate-green{display:inline-block;transform:rotate(-70deg);transform-origin:0 100%;color:#0b7a36;background:#c9f7d3;
+  font-weight:700;padding:0 .25em;margin:0 .9em 0 .3em;line-height:1.1;white-space:nowrap}
+/* recolor in place (--tc set inline) */
+.m-color-text{color:var(--tc,#0a97a8)!important;font-weight:600}
+
+/* ---------- 4. overlay ---------- */
+#spider{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:50}
+#titleOverlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:0 8vw;
+  pointer-events:none;z-index:70;font:900 clamp(34px,6.4vw,92px)/1.05 Impact,"Arial Black",Arial,sans-serif;color:#fff;
+  -webkit-text-stroke:.16em #000;paint-order:stroke fill;text-shadow:0 .06em .12em rgba(0,0,0,.4);text-transform:none}
+#titleOverlay.show{display:flex}
+
+/* ---------- 5. AI panel (dark glass) ---------- */
+#analyst{position:fixed;top:14px;right:14px;bottom:14px;width:362px;z-index:60;display:flex;flex-direction:column;
+  background:rgba(14,17,23,.82);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);
+  border:1px solid rgba(255,255,255,.12);border-radius:14px;color:#dfe6ee;
+  font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+@media (max-width:1099px){#analyst{width:min(340px,92vw);top:auto;height:44vh}}
+.a-head{padding:12px 16px;font:600 12.5px ui-monospace,Menlo,monospace;color:#19c3d6;border-bottom:1px solid rgba(255,255,255,.08);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a-tabs{display:flex;gap:2px;padding:6px 10px 0}
+.a-tabs button{flex:1;background:none;border:0;color:#8794a3;padding:7px 4px;font-weight:600;font-size:12px;font-family:inherit;cursor:pointer;border-bottom:2px solid transparent}
+.a-tabs button.on{color:#fff;border-color:#19c3d6}
+.a-tabs span{background:#e0303a;color:#fff;border-radius:9px;padding:0 6px;font-size:10px;margin-left:3px}
+.a-body{flex:1;overflow-y:auto;padding:12px 16px;scrollbar-width:thin}
+.a-body[hidden]{display:none}
+.card{padding:10px 12px;margin-bottom:10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.04)}
+.card h4{margin:0 0 6px;font:600 11.5px ui-monospace,Menlo,monospace;color:#ff9a6b;letter-spacing:.02em}
+.card p{margin:0;white-space:pre-wrap}
+.card .key{margin-top:8px;font:12px ui-monospace,Menlo,monospace;color:#ffb48a;background:rgba(255,122,61,.12);padding:4px 8px;border-radius:6px;display:inline-block}
+.card.err p{color:#ff8a8a}
+.card.hint p{color:#9fb0c2}
+.cursor::after{content:"▍";color:#19c3d6;animation:blink 1s steps(2) infinite;margin-left:1px}
+@keyframes blink{50%{opacity:0}}
+.note{font-size:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.note b{font:600 10px ui-monospace,monospace;text-transform:uppercase;padding:1px 6px;border-radius:4px;margin-right:6px;color:#000}
+.note b.metric{background:#ff7a3d}.note b.model{background:#b78cff}.note b.dataset{background:#25d7f0}
+.note small{display:block;color:#8794a3;margin-top:2px}
+.a-foot{padding:10px 12px;border-top:1px solid rgba(255,255,255,.08);display:grid;gap:8px}
+.seg{display:flex;border:1px solid rgba(255,255,255,.14);border-radius:8px;overflow:hidden}
+.seg button{flex:1;background:none;border:0;color:#9fb0c2;padding:5px 2px;font-size:11.5px;font-family:inherit;cursor:pointer}
+.seg button.on{background:#19c3d6;color:#001b1f;font-weight:700}
+.btns{display:flex;gap:6px;flex-wrap:wrap}
+.btns button{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#dfe6ee;border-radius:7px;padding:4px 8px;font-size:11.5px;font-family:inherit;cursor:pointer}
+.btns button:hover{background:rgba(255,255,255,.15)}
+.keys{font:10.5px ui-monospace,monospace;color:#6c7a89}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#111;color:#fff;padding:8px 16px;border-radius:20px;
+  font:13px sans-serif;z-index:90;opacity:0;transition:opacity .25s;pointer-events:none}
+#toast.show{opacity:.92}
+
+/* ---------- reader mode: calm evidence + your own highlights ---------- */
+.m-key{background:#ffe066;color:#111;box-shadow:0 0 0 2px #ff7a3d;border-radius:3px;font-weight:600}
+.u-hl{border-radius:2px;cursor:pointer;box-decoration-break:clone}
+.u-hl-yellow{background:#fff1a0;box-shadow:.25em 0 0 #fff1a0}
+.u-hl-green{background:#c8f5c0;box-shadow:.25em 0 0 #c8f5c0}
+.u-hl-pink{background:#ffd2e8;box-shadow:.25em 0 0 #ffd2e8}
+.u-hl-blue{background:#cfe6ff;box-shadow:.25em 0 0 #cfe6ff}
+.u-hl.has-note{border-bottom:2px dotted #c2185b}
+#selbar{position:fixed;z-index:80;display:none;gap:4px;align-items:center;padding:5px 6px;border-radius:10px;
+  background:#12161dee;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 28px rgba(0,0,0,.4);
+  font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#e6ebf2}
+#selbar.show{display:flex}
+#selbar button{font:inherit;background:none;border:0;color:inherit;padding:4px 8px;border-radius:6px;cursor:pointer}
+#selbar button:hover{background:rgba(255,255,255,.12)}
+#selbar .dot{width:16px;height:16px;border-radius:50%;padding:0;border:2px solid rgba(255,255,255,.25)}
+#selbar .sep{width:1px;height:18px;background:rgba(255,255,255,.18);margin:0 3px}
+#notePop{position:fixed;z-index:85;display:none;width:280px;padding:10px;border-radius:12px;background:#12161d;border:1px solid rgba(255,255,255,.16);box-shadow:0 12px 36px rgba(0,0,0,.5)}
+#notePop.show{display:block}
+#notePop textarea{width:100%;height:84px;background:#0b0e13;color:#e6ebf2;border:1px solid #2a3442;border-radius:8px;padding:8px;font:13px/1.4 -apple-system,sans-serif;resize:none}
+#notePop .r{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
+#notePop button{font:12px sans-serif;border-radius:7px;padding:5px 12px;border:1px solid #2a3442;background:none;color:#e6ebf2;cursor:pointer}
+#notePop button.go{background:#19c3d6;border-color:#19c3d6;color:#021417;font-weight:700}
+.a-tabs button{font-size:11.5px!important;padding:7px 2px!important}
+.brief h5{margin:12px 0 3px;font:600 10.5px ui-monospace,Menlo,monospace;color:#19c3d6;text-transform:uppercase;letter-spacing:.07em}
+.brief p,.brief li{margin:0;font-size:13px}.brief ul{margin:0;padding-left:18px}
+.chip{display:block;text-align:left;width:100%;margin:5px 0 0;padding:6px 9px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#cfd8e3;font:12px/1.4 -apple-system,sans-serif;cursor:pointer}
+.chip:hover{border-color:#19c3d6}.chip i{color:#8794a3;font-style:normal;display:block;font-size:11px}
+.a-in{display:grid;gap:6px;margin-bottom:10px}
+.a-in input,.a-in textarea{width:100%;background:rgba(0,0,0,.35);color:#e6ebf2;border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 9px;font:12.5px -apple-system,sans-serif}
+.a-in textarea{resize:vertical;min-height:54px}
+.pbtn{background:#19c3d6;color:#021417;border:0;border-radius:8px;padding:7px 12px;font:700 12.5px -apple-system,sans-serif;cursor:pointer}
+.pbtn.ghost{background:rgba(255,255,255,.08);color:#dfe6ee;font-weight:600}.pbtn:disabled{opacity:.5}
+.q-bub{background:rgba(25,195,214,.14);border-radius:10px 10px 2px 10px;padding:8px 10px;margin:8px 0 6px 26px;font-size:13px}
+.hl-item{padding:8px 10px;border-left:4px solid #fff1a0;background:rgba(255,255,255,.04);border-radius:0 8px 8px 0;margin:7px 0;cursor:pointer;font-size:12.5px}
+.hl-item small{display:block;color:#8794a3;margin-top:3px}.hl-item .nt{color:#ffb4d6;margin-top:4px}
+.hl-item[data-c=green]{border-color:#c8f5c0}.hl-item[data-c=pink]{border-color:#ffd2e8}.hl-item[data-c=blue]{border-color:#cfe6ff}
+
+.seg[hidden]{display:none}
+
+/* ---------- library dialog ---------- */
+.libbtn{font:12px ui-monospace,Menlo,monospace;background:#fff;border:1px solid #bbb;border-radius:6px;padding:3px 10px;cursor:pointer;color:#333}
+.libbtn:hover{border-color:#19c3d6;color:#0a7a88}
+#libDlg{position:fixed;inset:0;z-index:95;display:none;align-items:flex-start;justify-content:center;padding-top:7vh;background:rgba(6,9,14,.55);backdrop-filter:blur(3px)}
+#libDlg.show{display:flex}
+.lib-card{width:min(680px,94vw);max-height:84vh;overflow:auto;background:#12161d;color:#e6ebf2;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:16px 18px 20px;box-shadow:0 24px 70px rgba(0,0,0,.55);font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.lib-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}.lib-top b{font-size:15px}.lib-tabs{margin-left:auto}
+.lib-x{background:none;border:0;color:#8794a3;font-size:16px;cursor:pointer}
+.lib-card input,.lib-card textarea{width:100%;background:#0b0e13;color:#e6ebf2;border:1px solid #2a3442;border-radius:9px;padding:9px 11px;font:13px -apple-system,sans-serif;margin-bottom:8px}
+.lib-card textarea{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;resize:vertical}
+.lib-card input:focus,.lib-card textarea:focus{outline:2px solid rgba(25,195,214,.5);border-color:#19c3d6}
+.lib-item{padding:10px 12px;border:1px solid rgba(255,255,255,.09);border-radius:10px;margin-bottom:7px;background:rgba(255,255,255,.03)}
+
+.lib-list .lib-item:hover{border-color:#19c3d6;cursor:pointer}.lib-item.cur{border-color:#19c3d6;background:rgba(25,195,214,.09)}
+.lib-t{font-weight:600}.lib-s{color:#8794a3;font-size:12px;margin-top:2px}
+.lib-tags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;align-items:center}
+.tg{font:11px ui-monospace,monospace;padding:1px 8px;border-radius:99px;border:1px solid rgba(255,255,255,.14);color:#9fb0c2}.tg.on{color:#19c3d6;border-color:#19c3d6}
+.lib-h{margin:16px 0 6px;font:600 11px ui-monospace,Menlo,monospace;color:#19c3d6;text-transform:uppercase;letter-spacing:.07em}
+.lib-row{display:flex;gap:10px;align-items:flex-start}.lib-row input{margin:0}.lib-hint{color:#8794a3;font-size:12px}
+.lib-out{background:#0b0e13;border:1px solid #2a3442;border-radius:9px;padding:9px 11px;font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;max-height:150px;overflow:auto;margin:8px 0 0;color:#cfd8e3}
+.lib-out[hidden]{display:none}
+.lib-chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip-btn{font:12px -apple-system,sans-serif;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#dfe6ee;border-radius:99px;padding:4px 11px;cursor:pointer}
+.chip-btn:hover{border-color:#19c3d6;color:#19c3d6}
+.lib-empty{color:#8794a3;text-align:center;padding:14px}
+.lib-card .seg button{background:none;border:0;color:#9fb0c2;padding:5px 12px;font:12.5px -apple-system,sans-serif;cursor:pointer}.lib-card .seg button.on{background:#19c3d6;color:#021417;font-weight:700}
+.lib-card .pbtn{background:#19c3d6;color:#021417;border:0;border-radius:8px;padding:8px 14px;font:700 12.5px -apple-system,sans-serif;cursor:pointer;white-space:nowrap}
+.lib-card .pbtn.ghost{background:rgba(255,255,255,.08);color:#dfe6ee;font-weight:600}.lib-card .pbtn:disabled{opacity:.5}

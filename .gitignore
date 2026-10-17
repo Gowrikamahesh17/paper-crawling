@@ -1,0 +1,14 @@
+# secrets + generated data
+.env
+cache/*
+!cache/.gitkeep
+logs/*
+!logs/.gitkeep
+debug/dumps/*
+!debug/dumps/.gitkeep
+__pycache__/
+.venv/
+.DS_Store
+
+# your thesis notes (highlights, Q&A, briefs). Remove this line to put them in git.
+notes/

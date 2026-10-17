@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper Crawler</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- The paper: header + body injected by js/loader.js -->
+  <div id="sheet">
+    <header id="hdr">
+      <h1 id="pTitle">Paper Crawler</h1>
+      <div id="pAuthors"></div>
+      <div id="pMeta"><span id="pId"></span>
+        <button class="libbtn" data-lib="library">📚 Library (<span class="libcount">0</span>)</button>
+        <button class="libbtn" data-lib="add">＋ Add paper</button>
+      </div>
+    </header>
+    <main id="paper"><p class="boot">Loading…</p></main>
+  </div>
+
+  <!-- Spider overlay: never intercepts the mouse -->
+  <canvas id="spider"></canvas>
+
+  <!-- TikTok-style caption, toggle with T -->
+  <div id="titleOverlay" aria-hidden="true"></div>
+
+  <!-- AI explainer panel -->
+  <aside id="analyst">
+    <div class="a-head">▸ crawling: <span id="crawlSec">…</span></div>
+    <nav class="a-tabs">
+      <button data-tab="live" class="on">Live</button>
+      <button data-tab="brief">Brief</button>
+      <button data-tab="ask">Ask</button>
+      <button data-tab="notes">Notes <span id="noteCount">0</span></button>
+      <button data-tab="history">History</button>
+    </nav>
+    <section id="tab-live" class="a-body"></section>
+    <section id="tab-brief" class="a-body" hidden></section>
+    <section id="tab-ask" class="a-body" hidden></section>
+    <section id="tab-notes" class="a-body" hidden>
+      <div class="seg" id="notesSeg" style="margin-bottom:10px"><button data-n="mine" class="on">My highlights</button><button data-n="crawler">Crawler finds</button></div>
+      <div id="myNotes"></div><div id="crawlerNotes" hidden></div>
+    </section>
+    <section id="tab-history" class="a-body" hidden></section>
+    <footer class="a-foot">
+      <div class="seg" id="modeSeg" title="Reader = calm thesis mode. Show = the full crawling performance (X)">
+        <button data-mode="reader">Reader mode</button><button data-mode="show">Show mode</button>
+      </div>
+      <div class="seg" id="levelSeg" title="Explanation level (B / S / R)">
+        <button data-level="beginner">beginner</button><button data-level="student">student</button><button data-level="researcher">researcher</button>
+      </div>
+      <div class="seg" id="intSeg" title="Show-mode markup intensity (1 / 2 / 3)">
+        <button data-int="calm">calm</button><button data-int="normal">normal</button><button data-int="wild">wild</button>
+      </div>
+      <div class="btns">
+        <button id="btnExplain" title="Select text, then press E">Explain selection</button>
+        <button id="btnThesis" title="Brief + highlights + Q&A + BibTeX">Thesis notes .md</button>
+        <button id="btnMd">Breakdown .md</button>
+        <button id="btnJson">Crawler .json</button>
+        <button id="btnHide" title="V">Hide spider</button>
+        <button id="btnDrop" title="D">Re-drop</button>
+      </div>
+      <div class="keys">Select text → toolbar · X mode · V hide spider · Space pause · T title · C clear · ?debug</div>
+    </footer>
+  </aside>
+  <div id="selbar"></div>
+  <div id="notePop"></div>
+  <div id="toast"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

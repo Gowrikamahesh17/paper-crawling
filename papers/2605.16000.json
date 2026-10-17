@@ -1,0 +1,19 @@
+{
+  "id": "2605.16000",
+  "title": "CitePrism: Human-in-the-Loop AI for Citation Auditing and Editorial Integrity",
+  "authors": [
+    "Gowrika Mahesh",
+    "Budanur Madappa Darshan Gowda",
+    "Kavana Gopladevarahalli Papegowda",
+    "Prajwal Basavaraj",
+    "Binh Vu",
+    "Swati Chandna",
+    "Mehrdad Jalali"
+  ],
+  "published": "2026-05-15",
+  "abstract": "Editors and reviewers are expected to ensure that manuscripts cite relevant, accurate, current, and ethically appropriate literature, yet manuscript-level citation auditing remains largely manual, fragmented, and difficult to scale. Citation context, metadata quality, self-citation patterns, and bibliographic integrity all affect whether a reference appropriately supports a local claim. We present CitePrism, a transparent hybrid decision-support framework for editorial citation auditing that combines LLM-assisted contextual reasoning, embedding-based semantic similarity, metadata verification, integrity-oriented flags, and human-in-the-loop analyst review. CitePrism extracts citation neighborhoods, enriches reference metadata, computes fused relevance scores, surfaces metadata and self-citation review prompts, and supports configurable threshold-based triage. In a preliminary validation on a single case-study manuscript with 104 references from pavement engineering, agreement with human binary relevance labels reached Cohen's kappa = 0.429. At operating threshold tau = 17, CitePrism flagged all human-labeled irrelevant citations, while also producing false positives requiring analyst review. These results suggest that CitePrism may support conservative editorial screening and citation-quality triage, but they do not establish general editorial performance. CitePrism is intended as pilot-stage decision support, not as an autonomous misconduct detector or automated editorial decision system. Broader validation across manuscripts, domains, annotators, baselines, and deployment settings is required before operational use.",
+  "abs_url": "https://arxiv.org/abs/2605.16000",
+  "source": "arxiv.org/html",
+  "html_url": "https://arxiv.org/html/2605.16000",
+  "fetched_at": "2026-10-17T10:26:58+00:00"
+}

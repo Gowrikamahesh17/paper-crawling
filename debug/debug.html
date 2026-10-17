@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Paper Crawler - debug</title>
+<style>
+ body{font:13px/1.45 ui-monospace,Menlo,monospace;background:#101418;color:#d6dde5;margin:0;padding:18px}
+ h2{font-size:13px;color:#19c3d6;margin:22px 0 6px;text-transform:uppercase;letter-spacing:.06em}
+ pre{background:#0a0d10;border:1px solid #232b33;border-radius:8px;padding:10px;max-height:320px;overflow:auto;white-space:pre-wrap;word-break:break-all;margin:0}
+ button{background:#1d2630;color:#d6dde5;border:1px solid #33414f;border-radius:6px;padding:4px 10px;font:inherit;cursor:pointer;margin-right:6px}
+ .ok{color:#6ee787}.bad{color:#ff8a8a} a{color:#19c3d6}
+</style></head><body>
+<h1 style="font-size:16px;margin:0">Paper Crawler debug <small><a href="/?debug">open app with ?debug</a></small></h1>
+<h2>Config <button id="rc">refresh</button></h2><pre id="cfg">…</pre>
+<h2>Gemini <button id="ping">ping Gemini</button></h2><pre id="pingOut">(click ping - sends one tiny request)</pre>
+<h2>Server log <button id="rs">refresh</button></h2><pre id="slog">…</pre>
+<h2>Browser log <button id="rb">refresh</button></h2><pre id="clog">…</pre>
+<h2>AI dumps (needs DEBUG_DUMP=1) <button id="rd">refresh</button></h2><pre id="dumps">…</pre><pre id="dump" style="margin-top:6px;display:none"></pre>
+<script>
+const $=id=>document.getElementById(id), j=u=>fetch(u).then(r=>r.json());
+async function cfg(){const c=await j('/api/config');$('cfg').textContent=JSON.stringify(c,null,2);
+  $('cfg').className=c.hasKey?'ok':'bad'}
+async function logs(f,el){try{const d=await j('/api/debug/logs?file='+f+'&tail=300');$(el).textContent=d.lines?d.lines.join('\n'):JSON.stringify(d);$(el).scrollTop=1e9}catch(e){$(el).textContent=e}}
+async function dumps(){const d=await j('/api/debug/dumps');$('dumps').innerHTML='';
+  (d.files||[]).forEach(f=>{const b=document.createElement('button');b.textContent=f;b.onclick=async()=>{const x=await j('/api/debug/dumps/'+f);const p=$('dump');p.style.display='block';p.textContent=JSON.stringify(x,null,2)};$('dumps').append(b,document.createElement('br'))});
+  if(!d.files||!d.files.length)$('dumps').textContent=d.enabled?'no dumps yet':'DEBUG_DUMP=0 - set DEBUG_DUMP=1 in .env and restart'}
+$('rc').onclick=cfg;$('rs').onclick=()=>logs('server','slog');$('rb').onclick=()=>logs('client','clog');$('rd').onclick=dumps;
+$('ping').onclick=async()=>{$('pingOut').textContent='…';const r=await j('/api/debug/ping');$('pingOut').textContent=JSON.stringify(r,null,2);$('pingOut').className=r.ok?'ok':'bad'};
+cfg();logs('server','slog');logs('client','clog');dumps();
+</script></body></html>

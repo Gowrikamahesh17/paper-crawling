@@ -1,0 +1,16 @@
+{
+  "id": "2606.03178",
+  "title": "Beyond Network Topology: Biological Evidence Integration and Reproducible Benchmarking for Protein Complex Detection",
+  "authors": [
+    "Sima Soltani",
+    "Mehrdad Jalali",
+    "Yahya Forghani",
+    "Reza Sheibani"
+  ],
+  "published": "2026-06-02",
+  "abstract": "Protein complexes are molecular assemblies that coordinate cellular regulation, signaling, metabolism, and disease-relevant protein function. Detecting such assemblies from protein-protein interaction (PPI) networks remains challenging because network topology is an incomplete abstraction: an edge may represent direct binding, functional association, co-complex evidence, co-expression, co-localization, or a computationally predicted interaction. This focused critical methodological review examines how biological evidence can improve protein-complex detection beyond dense-subgraph discovery. We consider Gene Ontology, expression, localization, domains and motifs, sequence and structure, interface evidence, temporal context, RNA or regulatory evidence, and representation learning, while retaining classical graph-clustering methods as historical baselines. Interpretable evidence-aware graph methods currently provide a strong balance between biological plausibility and reproducibility, whereas structure-aware, temporal, heterogeneous, and hypergraph models offer greater biological realism but require stronger independent benchmarking. Reported F-measures cannot be directly compared across incompatible PPI releases, reference sets, matching thresholds, preprocessing pipelines, and metric implementations. Progress therefore requires fixed dataset versions, explicit controls for Gene Ontology circularity, overlap-aware metrics, uncertainty estimates, and executable software packages. Reliable protein-complex detection ultimately depends on connecting graph-based predictions to molecular structure, interaction mechanisms, cellular context, and functional assembly.",
+  "abs_url": "https://arxiv.org/abs/2606.03178",
+  "source": "arxiv.org/html",
+  "html_url": "https://arxiv.org/html/2606.03178",
+  "fetched_at": "2026-10-17T12:23:20+00:00"
+}
